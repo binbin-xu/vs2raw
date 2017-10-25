@@ -10,7 +10,7 @@ dataset/cam0/data.csv -- where you put a csv file that contains filenames of all
 dataset/depth0/data -- where you put the depth images
 dataset/depth0/data.csv -- where you put a csv file that contains filenames of all depth images
 dataset/cameraInfo.txt -- where you put intrinsic of the camera.
-````
+```
 
 A sample `cameraInfo.txt` could look like this:
 
