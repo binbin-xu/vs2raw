@@ -58,6 +58,37 @@ bool Raw::depthToUshort(const cv::Mat mat, ushort * depthMap,
     return true;
 }
 
+bool Raw::CFtoBinRaw(std::string rgb_path, std::string depth_path, std::string output_path,
+                     unsigned int width = 640, unsigned int height = 480,
+                     const float cx = 320.0f, const float cy = 240.0f, const float fx = 600.0f, const float fy = 600.0f){
+
+    // Load Depth
+//    result.depth = cv::imread(depthImagePath, cv::IMREAD_UNCHANGED);
+//    if (result.depth.total() == 0) throw std::invalid_argument("Could not read depth-image file. (Empty)");
+//    if (result.depth.type() != CV_32FC1) {
+//      cv::Mat newDepth(result.depth.rows, result.depth.cols, CV_32FC1);
+//      if (result.depth.type() == CV_32FC3) {
+//        unsigned depthIdx = 0;
+//        for (int i = 0; i < result.depth.rows; ++i) {
+//          cv::Vec3f* pixel = result.depth.ptr<cv::Vec3f>(i);
+//          for (int j = 0; j < result.depth.cols; ++j) ((float*)newDepth.data)[depthIdx++] = pixel[j][0];
+//        }
+
+//      } else if (result.depth.type() == CV_16UC1) {
+//        std::cout << "Warning -- your depth scale is likely to mismatch. Check ImageLogReader.cpp!" << std::endl;
+//        unsigned depthIdx = 0;
+//        for (int i = 0; i < result.depth.rows; ++i) {
+//          unsigned short* pixel = result.depth.ptr<unsigned short>(i);
+//          for (int j = 0; j < result.depth.cols; ++j) ((float*)newDepth.data)[depthIdx++] = 0.0006f * pixel[j];
+//        }
+//      } else {
+//        throw std::invalid_argument("Unsupported depth-files: " + cvTypeToString(result.depth.type()));
+//      }
+//      result.depth = newDepth;
+//    }
+
+}
+
 bool Raw::toBinRaw(std::string rgb_path, std::string depth_path, std::string output_path, int index,
                 unsigned int width, unsigned int height,
                 const float cx, const float cy, const float fx, const float fy){

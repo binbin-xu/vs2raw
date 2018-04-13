@@ -17,3 +17,8 @@ add_executable(vs2Raw
     string_tools.cpp
     file_tools.cpp)
 
+add_executable(cf2Raw
+    raw.cpp
+    cf2binraw.cpp
+    string_tools.cpp
+    file_tools.cpp)

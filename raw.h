@@ -95,7 +95,9 @@ bool depthToUshort(const cv::Mat mat, ushort * depthMap,
 bool toBinRaw(std::string rgb_path, std::string depth_path, std::string output_path, int index = 0,
                 unsigned int width = 640, unsigned int height = 480,
                 const float cx = 320.0f, const float cy = 240.0f, const float fx = 600.0f, const float fy = 600.0f);
-
+bool CFtoBinRaw(std::string rgb_path, std::string depth_path, std::string output_path,
+                unsigned int width = 640, unsigned int height = 480,
+                const float cx = 320.0f, const float cy = 240.0f, const float fx = 600.0f, const float fy = 600.0f);
 }
 
 }
