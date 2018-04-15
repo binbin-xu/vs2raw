@@ -66,7 +66,11 @@ bool Raw::CFtoBinRaw(std::string rgb_path, std::string depth_path, std::string g
 
     uint2 inputSize = Raw::make_uint2(width, height);
     static const uint2 imageSize = {width, height};
-    std::string dataset_path = output_path + "gt.raw";
+    std::string dataset_path = output_path + "/gt.raw";
+    std::string gt_file_path = output_path + "/gt.traj";
+
+    std::ofstream gt_csv(gt_file_path, std::ios::out | std::ios::trunc);
+
     FILE* pFile = fopen(dataset_path.c_str(), "wb");
     if (!pFile) {
         std::cerr << "[ERROR] File opening failed : gt.raw" << std::endl;
@@ -123,8 +127,9 @@ bool Raw::CFtoBinRaw(std::string rgb_path, std::string depth_path, std::string g
             }
             depth = newDepth;
         } else {
-            cv::Mat newDepth(depth.rows, depth.cols, CV_16UC1);
 
+            // convert depth into mm
+            cv::Mat newDepth(depth.rows, depth.cols, CV_16UC1);
             unsigned depthIdx = 0;
             for (int i = 0; i < depth.rows; ++i) {
                 float* pixel = depth.ptr<float>(i);
@@ -133,9 +138,15 @@ bool Raw::CFtoBinRaw(std::string rgb_path, std::string depth_path, std::string g
             depth = newDepth;
         }
 
+        // write gt trajectory
+        gt_csv << std::setfill('0') << std::setw(5) << iImg << " "
+               << std::setprecision(9) << px << " " << py << " " << pz << " "
+               << std::setprecision(9) << qw << " " << qx << " " << qy << " " << qz << std::endl;
+
         Raw::imageToUchar3(rgb, rgbRaw);
         Raw::depthToUshort(depth, depthRaw, cx, cy, fx, fy);
 
+        // write rgb and depth images
         int total = 0;
         total += fwrite(&(inputSize), sizeof(imageSize), 1, pFile);
         total += fwrite(depthRaw, sizeof(uint16_t), width * height, pFile);
@@ -147,6 +158,7 @@ bool Raw::CFtoBinRaw(std::string rgb_path, std::string depth_path, std::string g
     }
 
     std::cout << std::endl;
+    gt_csv.close();
     fclose(pFile);
     return true;
 }
