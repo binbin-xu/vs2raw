@@ -136,12 +136,18 @@ bool Raw::CFtoBinRaw(std::string rgb_path, std::string depth_path, std::string g
                 for (int j = 0; j < depth.cols; ++j) ((unsigned short*)newDepth.data)[depthIdx++] = 1000 * pixel[j];
             }
             depth = newDepth;
+
+            // depth test
+//            std::stringstream deptest_path_stream;
+//            deptest_path_stream << std::setfill('0') << std::setw(4) << ts << ".png";
+//            newDepth.convertTo(newDepth,CV_16UC1,5);
+//            cv::imwrite(deptest_path_stream.str(),newDepth);
         }
 
         // write gt trajectory
         gt_csv << std::setfill('0') << std::setw(5) << iImg << " "
-               << std::setprecision(9) << px << " " << py << " " << pz << " "
-               << std::setprecision(9) << qw << " " << qx << " " << qy << " " << qz << std::endl;
+               << std::setprecision(7) << px << " " << py << " " << pz << " "
+               << std::setprecision(7) << qw << " " << qx << " " << qy << " " << qz << std::endl;
 
         Raw::imageToUchar3(rgb, rgbRaw);
         Raw::depthToUshort(depth, depthRaw, cx, cy, fx, fy);
