@@ -122,6 +122,15 @@ bool Raw::CFtoBinRaw(std::string rgb_path, std::string depth_path, std::string g
                 std::cerr << "[ERROR] Unsupported depth format" << std::endl;
             }
             depth = newDepth;
+        } else {
+            cv::Mat newDepth(depth.rows, depth.cols, CV_16UC1);
+
+            unsigned depthIdx = 0;
+            for (int i = 0; i < depth.rows; ++i) {
+                float* pixel = depth.ptr<float>(i);
+                for (int j = 0; j < depth.cols; ++j) ((unsigned short*)newDepth.data)[depthIdx++] = 1000 * pixel[j];
+            }
+            depth = newDepth;
         }
 
         Raw::imageToUchar3(rgb, rgbRaw);
