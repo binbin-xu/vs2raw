@@ -58,6 +58,47 @@ bool Raw::depthToUshort(const cv::Mat mat, ushort * depthMap,
     return true;
 }
 
+bool Raw::FLGtoBinRaw(std::string output_path, KlgReader* reader,
+                      unsigned int width, unsigned int height,
+                      const float cx, const float cy, const float fx, const float fy){
+
+    uint2 inputSize = Raw::make_uint2(width, height);
+    static const uint2 imageSize = {width, height};
+
+    std::string path = minibr::strip_filename(output_path);
+    std::string file_name = minibr::strip_extension(minibr::get_filename(output_path));
+
+    std::string output_file = path + "/" + file_name + ".raw";
+    FILE* pFile = fopen(output_file.c_str(), "wb");
+    if (!pFile) {
+        std::cerr << "[ERROR] File opening failed : gt.raw" << std::endl;
+        return false;
+    }
+
+    uchar3 * rgbRaw = (uchar3*) malloc(sizeof(uchar3) * width * height);
+    ushort * depthRaw = (ushort*) malloc(sizeof(ushort) * width * height);
+
+    for (int iImg = 0; reader->nextFrame(); iImg++) {
+        cv::Mat rgb = reader->rgb();
+        cv::Mat depth = reader->depth();
+
+        Raw::imageToUchar3(rgb, rgbRaw);
+        Raw::depthToUshort(depth, depthRaw, cx, cy, fx, fy);
+
+        // write rgb and depth images
+        int total = 0;
+        total += fwrite(&(inputSize), sizeof(imageSize), 1, pFile);
+        total += fwrite(depthRaw, sizeof(uint16_t), width * height, pFile);
+        total += fwrite(&(inputSize), sizeof(imageSize), 1, pFile);
+        total += fwrite(rgbRaw, sizeof(uchar3), width * height, pFile);
+
+        std::cout << "\r[INFO] Read frame " << std::setw(6) << iImg+1 << " ";
+        if (iImg % 2) fflush(stdout);
+    }
+
+    return true;
+}
+
 bool Raw::CFtoBinRaw(std::string rgb_path, std::string depth_path, std::string gt_path, std::string output_path,
                      unsigned int width, unsigned int height,
                      const float cx, const float cy, const float fx, const float fy){
@@ -139,7 +180,7 @@ bool Raw::CFtoBinRaw(std::string rgb_path, std::string depth_path, std::string g
 
             // depth test
 //            std::stringstream deptest_path_stream;
-//            deptest_path_stream << std::setfill('0') << std::setw(4) << ts << ".png";
+//            deptest_path_stream << "/home/wenbin/Desktop/cftest/" << std::setfill('0') << std::setw(4) << ts << ".png";
 //            newDepth.convertTo(newDepth,CV_16UC1,5);
 //            cv::imwrite(deptest_path_stream.str(),newDepth);
         }

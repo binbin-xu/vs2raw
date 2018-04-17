@@ -12,6 +12,7 @@
 #define RAW_H
 
 #include <opencv2/opencv.hpp>
+#include "KlgReader.h"
 
 namespace minibr {
 
@@ -98,6 +99,9 @@ bool toBinRaw(std::string rgb_path, std::string depth_path, std::string output_p
 bool CFtoBinRaw(std::string rgb_path, std::string depth_path, std::string gt_path, std::string output_path,
                 unsigned int width = 640, unsigned int height = 480,
                 const float cx = 320.0f, const float cy = 240.0f, const float fx = 600.0f, const float fy = 600.0f);
+bool FLGtoBinRaw(std::string output_path, KlgReader* reader,
+                 unsigned int width = 640, unsigned int height = 480,
+                 const float cx = 320.0f, const float cy = 240.0f, const float fx = 600.0f, const float fy = 600.0f);
 }
 
 }

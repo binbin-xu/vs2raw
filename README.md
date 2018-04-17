@@ -1,6 +1,6 @@
 # VS2Raw
 
-This is a tool to convert dataset into `.raw` format that fits `kfusion` and `ofusion`.
+This is a tool to convert various datasets into `.raw` format that fits `kfusion` and `ofusion`.
 
 ### ViSim dataset
 
@@ -66,3 +66,10 @@ Then please run:
 ./cf2Raw [path-to-ViSim-Folder] [optional: use-noisy-depth (0 or 1)]
 ```
 
+### KLF (ElasticFusion) dataset
+
+Then please run:
+
+```
+./klg2Raw [path-to-klg-file] [image width] [image height] [image center x] [image center y] [focal lens x] [focal lens y]
+```
