@@ -65,8 +65,21 @@ bool Raw::FLGtoBinRaw(std::string output_path, KlgReader* reader,
     uint2 inputSize = Raw::make_uint2(width, height);
     static const uint2 imageSize = {width, height};
 
+//  rgb and depth directorys
     std::string path = minibr::strip_filename(output_path);
     std::string file_name = minibr::strip_extension(minibr::get_filename(output_path));
+    std::string rgb_dir = path + "/rgb/";
+    std::string depth_dir = path + "/depth/";
+    if (!file_exists(rgb_dir)){
+      make_directory(rgb_dir);
+    }
+    if (!file_exists(depth_dir)){
+      make_directory(depth_dir);
+    }
+
+//  make video
+  std::string video_file = path + "/rgb.mp4";
+  cv::VideoWriter video(video_file, CV_FOURCC('M','J','P','G'), 20.0, cv::Size(width,height));
 
     std::string output_file = path + "/" + file_name + ".raw";
     FILE* pFile = fopen(output_file.c_str(), "wb");
@@ -78,9 +91,20 @@ bool Raw::FLGtoBinRaw(std::string output_path, KlgReader* reader,
     uchar3 * rgbRaw = (uchar3*) malloc(sizeof(uchar3) * width * height);
     ushort * depthRaw = (ushort*) malloc(sizeof(ushort) * width * height);
 
+  std::string frames_path = path + "/frame.txt";
+  std::ofstream frame_csv(frames_path, std::ios::out | std::ios::trunc);
+
     for (int iImg = 0; reader->nextFrame(); iImg++) {
         cv::Mat rgb = reader->rgb();
         cv::Mat depth = reader->depth();
+
+//      std::string imgname = std::setfill('0') << std::setw(5) << iImg;
+      std::string img_string = std::to_string(iImg);
+      std::string imgname = std::string(5 - img_string.length(), '0') + img_string;
+
+      cv::imwrite(rgb_dir + imgname +".png", rgb);
+      video.write(rgb);
+        cv::imwrite(depth_dir + imgname +".png", depth/5000.f);
 
         Raw::imageToUchar3(rgb, rgbRaw);
         Raw::depthToUshort(depth, depthRaw, cx, cy, fx, fy);
@@ -94,8 +118,13 @@ bool Raw::FLGtoBinRaw(std::string output_path, KlgReader* reader,
 
         std::cout << "\r[INFO] Read frame " << std::setw(6) << iImg+1 << " ";
         if (iImg % 2) fflush(stdout);
-    }
 
+      // write gt trajectory
+      frame_csv << rgb_dir + imgname +".png" << depth_dir + imgname +".png" << std::endl;
+
+    }
+  video.release();
+  frame_csv.close();
     return true;
 }
 
