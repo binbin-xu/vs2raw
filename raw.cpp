@@ -239,8 +239,9 @@ bool Raw::toBinRaw(std::string rgb_path, std::string depth_path, std::string out
         }
         cv::Mat depthImage = cv::imread(depth_path+"/data/"+depthRow[0],CV_16UC1);
         if(depthRow.size()>1){
-            rgbImage = cv::imread(rgb_path+"/data/"+depthRow[1]);
+            depthImage = cv::imread(depth_path+"/data/"+depthRow[1],CV_16UC1);
         }
+
         Raw::imageToUchar3(rgbImage, rgbRaw);
         Raw::depthToUshort(depthImage, depthRaw, cx, cy, fx, fy);
 
