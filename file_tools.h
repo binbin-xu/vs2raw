@@ -19,7 +19,7 @@ namespace minibr
 bool file_exists(const std::string &path) throw();
 bool directory_exists(const std::string &path) throw();
 void make_directory(const std::string &path) throw();
-
+void remove_ending_return(std::string& string_end_with_r);
 }
 
 #endif

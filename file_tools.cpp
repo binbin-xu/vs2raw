@@ -48,4 +48,9 @@ void make_directory(const std::string &path) throw()
 #endif
 }
 
+void remove_ending_return(std::string& string_end_with_r){
+    if (!string_end_with_r.empty() && string_end_with_r[string_end_with_r.size() - 1] == '\r')
+        string_end_with_r.erase(string_end_with_r.size() - 1);
+}
+
 }

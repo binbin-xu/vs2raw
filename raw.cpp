@@ -262,14 +262,21 @@ bool Raw::toBinRaw(std::string rgb_path, std::string depth_path, std::string out
     depth_csv >> depthRow; // skip the first line
 
     for(int i = 0; rgb_csv >> rgbRow && depth_csv >> depthRow; ++i){
-        cv::Mat rgbImage = cv::imread(rgb_path+"/data/"+rgbRow[0]);
-        if(rgbRow.size()>1){
-            rgbImage = cv::imread(rgb_path+"/data/"+rgbRow[1]);
-        }
-        cv::Mat depthImage = cv::imread(depth_path+"/data/"+depthRow[0],CV_16UC1);
-        if(depthRow.size()>1){
-            depthImage = cv::imread(depth_path+"/data/"+depthRow[1],CV_16UC1);
-        }
+        std::string rgb_file, depth_file;
+        if(rgbRow.size()>1)
+            rgb_file = rgb_path+"/data/"+rgbRow[1];
+        else
+            rgb_file = rgb_path+"/data/"+rgbRow[0];
+        remove_ending_return(rgb_file);
+
+        if(depthRow.size()>1)
+            depth_file = depth_path+"/data/"+depthRow[1];
+        else
+            depth_file = depth_path+"/data/"+depthRow[0];
+        remove_ending_return(depth_file);
+
+        cv::Mat rgbImage = cv::imread(rgb_file);
+        cv::Mat depthImage = cv::imread(depth_file,CV_16UC1);
 
         Raw::imageToUchar3(rgbImage, rgbRaw);
         Raw::depthToUshort(depthImage, depthRaw, cx, cy, fx, fy);
