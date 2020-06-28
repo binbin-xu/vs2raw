@@ -79,7 +79,8 @@ bool Raw::FLGtoBinRaw(std::string output_path, KlgReader* reader,
 
 //  make video
   std::string video_file = path + "/rgb.mp4";
-  cv::VideoWriter video(video_file, CV_FOURCC('M','J','P','G'), 20.0, cv::Size(width,height));
+// if lacking FFMPEG: sudo apt-get install ffmpeg x264 libx264-dev
+  cv::VideoWriter video(video_file, CV_FOURCC('X','2','6','4'), 20.0, cv::Size(width,height));
 
     std::string output_file = path + "/" + file_name + ".raw";
     FILE* pFile = fopen(output_file.c_str(), "wb");
