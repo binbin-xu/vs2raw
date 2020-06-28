@@ -104,7 +104,10 @@ bool Raw::FLGtoBinRaw(std::string output_path, KlgReader* reader,
 
       cv::imwrite(rgb_dir + imgname +".png", rgb);
       video.write(rgb);
-        cv::imwrite(depth_dir + imgname +".png", depth/5000.f);
+
+//      std::cout<< depth.channels() << " << "<< depth.type() << std::endl;
+//      std::cout<< depth * 5 << std::endl;
+        cv::imwrite(depth_dir + imgname +".png", depth*5);   // /1000(mm->m) *5000 (tum)
 
         Raw::imageToUchar3(rgb, rgbRaw);
         Raw::depthToUshort(depth, depthRaw, cx, cy, fx, fy);
@@ -120,7 +123,7 @@ bool Raw::FLGtoBinRaw(std::string output_path, KlgReader* reader,
         if (iImg % 2) fflush(stdout);
 
       // write gt trajectory
-      frame_csv << rgb_dir + imgname +".png" << depth_dir + imgname +".png" << std::endl;
+      frame_csv << rgb_dir + imgname +".png" << " " << depth_dir + imgname +".png" << std::endl;
 
     }
   video.release();
